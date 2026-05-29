@@ -31,11 +31,4 @@ return [
         ],
     ],
 
-    'admin' => [
-        // Optional bootstrap token used to create the very first admin
-        // account when no admin exists yet. Leave blank to keep the
-        // first-admin endpoint open during local development.
-        'signup_token' => env('ADMIN_SIGNUP_TOKEN'),
-    ],
-
 ];

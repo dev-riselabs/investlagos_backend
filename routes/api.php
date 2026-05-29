@@ -33,7 +33,7 @@ Route::get('/publications/{publication:slug}', [PublicationController::class, 's
 */
 
 Route::prefix('admin')->group(function () {
-    // Auth — public endpoints (register is gated internally by token / existing admin).
+    // Auth — public endpoints.
     Route::post('auth/register', [AdminAuthController::class, 'register']);
     Route::post('auth/login', [AdminAuthController::class, 'login']);
 

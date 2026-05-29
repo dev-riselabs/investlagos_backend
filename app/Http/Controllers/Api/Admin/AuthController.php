@@ -8,43 +8,17 @@ use App\Http\Requests\Admin\RegisterAdminRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
     /**
-     * Register a new admin user.
-     *
-     * Bootstrap rules:
-     *  - If no admin exists yet, anyone with the configured signup token may
-     *    create the first admin (or signup is open if no token is configured).
-     *  - Otherwise the request must be authenticated as an existing admin.
+     * Register a new admin user. Signup is open — anyone with valid details
+     * may create an admin account.
      */
     public function register(RegisterAdminRequest $request): JsonResponse
     {
-        $hasAdmin = User::where('is_admin', true)->exists();
-        $configuredToken = config('services.admin.signup_token');
-
-        if ($hasAdmin) {
-            // Resolve the bearer token manually since this route is not behind
-            // auth:sanctum (so the bootstrap call can still succeed unauthenticated).
-            $user = Auth::guard('sanctum')->user();
-            if (! $user || ! $user->isAdmin()) {
-                return response()->json([
-                    'message' => 'Only existing admins can create new admin accounts.',
-                ], 403);
-            }
-        } elseif ($configuredToken) {
-            $provided = $request->header('X-Admin-Signup-Token') ?? $request->input('signup_token');
-            if (! hash_equals((string) $configuredToken, (string) $provided)) {
-                throw ValidationException::withMessages([
-                    'signup_token' => ['Invalid or missing admin signup token.'],
-                ]);
-            }
-        }
-
         $data = $request->validated();
 
         $admin = User::create([
