@@ -5,8 +5,6 @@ namespace App\Mail;
 use App\Models\Registration;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
-use Illuminate\Mail\Mailables\Content;
-use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
 class RegistrationConfirmationMail extends Mailable
@@ -17,30 +15,11 @@ class RegistrationConfirmationMail extends Mailable
     {
     }
 
-    public function envelope(): Envelope
+    public function build(): static
     {
-        return new Envelope(
-            subject: 'Your Invest Lagos 3.0 Registration is Confirmed',
-        );
-    }
-
-    public function content(): Content
-    {
-        return new Content(
-            view: 'emails.registration-confirmation',
-            with: [
-                'registration' => $this->registration,
-            ],
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
-     */
-    public function attachments(): array
-    {
-        return [];
+        return $this
+            ->subject('Your Invest Lagos 3.0 Registration is Confirmed')
+            ->view('emails.registration-confirmation')
+            ->with(['registration' => $this->registration]);
     }
 }

@@ -11,11 +11,11 @@
       <td align="center">
         <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08);">
 
-          {{-- Header with logo (base64 inline so it shows in all email clients) --}}
+          {{-- Header with logo (CID-embedded via build() — works in Gmail, Outlook, etc.) --}}
           <tr>
-            <td style="background-color:#1B3A2D;padding:28px 40px;text-align:center;">
+            <td style="background-color:#ffffff;padding:28px 40px;text-align:center;border-bottom:3px solid #1B3A2D;">
               <img
-                src="data:image/png;base64,{{ base64_encode(file_get_contents(public_path('logo_2.png'))) }}"
+                src="{{ $message->embed(public_path('logo.png')) }}"
                 alt="Invest Lagos"
                 width="180"
                 style="height:auto;display:block;margin:0 auto;max-width:180px;"
