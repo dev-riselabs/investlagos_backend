@@ -3,8 +3,10 @@
 use App\Http\Controllers\Api\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Api\Admin\PublicationController as AdminPublicationController;
 use App\Http\Controllers\Api\Admin\RegistrationController as AdminRegistrationController;
+use App\Http\Controllers\Api\Admin\SubscriberController as AdminSubscriberController;
 use App\Http\Controllers\Api\PublicationController;
 use App\Http\Controllers\Api\RegistrationController;
+use App\Http\Controllers\Api\SubscriberController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +22,9 @@ Route::get('/user', function (Request $request) {
 
 // Summit registration (public form on the frontend).
 Route::post('/registrations', [RegistrationController::class, 'store']);
+
+// Newsletter / updates subscription (public form on the frontend).
+Route::post('/subscribers', [SubscriberController::class, 'store']);
 
 // Publications (read-only public endpoints).
 Route::get('/publications', [PublicationController::class, 'index']);
@@ -51,5 +56,11 @@ Route::prefix('admin')->group(function () {
         Route::get('registrations/{registration}', [AdminRegistrationController::class, 'show']);
         Route::match(['put', 'patch'], 'registrations/{registration}', [AdminRegistrationController::class, 'update']);
         Route::delete('registrations/{registration}', [AdminRegistrationController::class, 'destroy']);
+
+        // Subscribers management (no create — subscribers come from the public form).
+        Route::get('subscribers/stats', [AdminSubscriberController::class, 'stats']);
+        Route::get('subscribers', [AdminSubscriberController::class, 'index']);
+        Route::get('subscribers/{subscriber}', [AdminSubscriberController::class, 'show']);
+        Route::delete('subscribers/{subscriber}', [AdminSubscriberController::class, 'destroy']);
     });
 });

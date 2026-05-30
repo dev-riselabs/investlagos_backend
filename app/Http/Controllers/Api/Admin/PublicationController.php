@@ -5,10 +5,15 @@ namespace App\Http\Controllers\Api\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePublicationRequest;
 use App\Http\Requests\Admin\UpdatePublicationRequest;
+use App\Mail\NewPublicationNotificationMail;
 use App\Models\Publication;
+use App\Models\Subscriber;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class PublicationController extends Controller
 {
@@ -63,6 +68,10 @@ class PublicationController extends Controller
 
         $publication = Publication::create($data);
 
+        if ($publication->is_published) {
+            $this->notifySubscribers($publication);
+        }
+
         return response()->json([
             'message' => 'Publication created.',
             'data'    => $publication->fresh(),
@@ -71,6 +80,7 @@ class PublicationController extends Controller
 
     public function update(UpdatePublicationRequest $request, Publication $publication): JsonResponse
     {
+        $wasPublished = (bool) $publication->is_published;
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
@@ -103,6 +113,11 @@ class PublicationController extends Controller
 
         $publication->update($data);
 
+        // Notify subscribers the first time a publication flips to published.
+        if (! $wasPublished && $publication->fresh()->is_published) {
+            $this->notifySubscribers($publication->fresh());
+        }
+
         return response()->json([
             'message' => 'Publication updated.',
             'data'    => $publication->fresh(),
@@ -123,5 +138,30 @@ class PublicationController extends Controller
         if ($path && Storage::disk('public')->exists($path)) {
             Storage::disk('public')->delete($path);
         }
+    }
+
+    /**
+     * Email every active subscriber about a newly published publication.
+     * Each send is wrapped so one failure cannot break the others or the request.
+     */
+    private function notifySubscribers(Publication $publication): void
+    {
+        Subscriber::query()
+            ->where('is_active', true)
+            ->select(['id', 'first_name', 'last_name', 'email'])
+            ->chunkById(200, function ($subscribers) use ($publication) {
+                foreach ($subscribers as $subscriber) {
+                    try {
+                        Mail::to($subscriber->email)
+                            ->send(new NewPublicationNotificationMail($subscriber, $publication));
+                    } catch (Throwable $e) {
+                        Log::error('Publication notification email failed', [
+                            'subscriber_id'  => $subscriber->id,
+                            'publication_id' => $publication->id,
+                            'exception'      => $e->getMessage(),
+                        ]);
+                    }
+                }
+            });
     }
 }
