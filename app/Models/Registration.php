@@ -30,10 +30,12 @@ class Registration extends Model
         'consent_media',
         'heard_about',
         'objective',
+        'confirmed_at',
     ];
 
     protected $casts = [
         'consent_updates' => 'boolean',
         'consent_media' => 'boolean',
+        'confirmed_at' => 'datetime',
     ];
 }

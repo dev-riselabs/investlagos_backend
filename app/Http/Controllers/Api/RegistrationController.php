@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreRegistrationRequest;
-use App\Mail\RegistrationConfirmationMail;
+use App\Mail\RegistrationNotificationMail;
 use App\Models\Registration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -28,10 +28,10 @@ class RegistrationController extends Controller
         $mailSent = true;
         try {
             Mail::to($registration->email)
-                ->send(new RegistrationConfirmationMail($registration));
+                ->send(new RegistrationNotificationMail($registration));
         } catch (Throwable $e) {
             $mailSent = false;
-            Log::error('Registration confirmation email failed', [
+            Log::error('Registration notification email failed', [
                 'registration_id' => $registration->id,
                 'email'           => $registration->email,
                 'exception'       => $e->getMessage(),

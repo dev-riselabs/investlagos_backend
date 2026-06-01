@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Registration Confirmation – Invest Lagos 3.0</title>
+    <title>Registration Notification – Invest Lagos 3.0</title>
 </head>
 
 <body style="margin:0;padding:0;background-color:#f4f4f4;font-family:'Helvetica Neue',Helvetica,Arial,sans-serif;">
@@ -31,8 +31,7 @@
                     {{-- Body --}}
                     <tr>
                         <td style="padding:40px 40px 32px;color:#1a1a1a;font-size:15px;line-height:1.7;">
-                            <p style="margin:0 0 20px;"><strong>YOU ARE IN: Your Invest Lagos 3.0 Registration is now
-                                    fully Confirmed.</strong></p>
+                            <p style="margin:0 0 20px;"><strong>WELCOME: Your Invest Lagos 3.0 Registration is pending & undergoing Review.</strong></p>
                             <p style="margin:0 0 20px;">
                                 Greetings <strong>{{ $registration->title }} {{ $registration->first_name }}
                                     {{ $registration->last_name }}</strong>,
@@ -43,32 +42,26 @@
 
                             </p>
                             <p style="margin:0 0 20px;">
-                                <strong>Congratulations.</strong>.
+                                We have successfully received your application, which is currently undergoing review by
+                                our Team. Once the review process is complete, you will receive a confirmation email
+                                with further details regarding your participation.
                             </p>
                             <p style="margin:0 0 20px;">
-                                We’re pleased to inform you that your Registration is now confirmed, and your
-                                seat/participation is fully guaranteed. Please subscribe to our Newsletter on the Invest
-                                Lagos 3.0 Official website, <strong>investlagos.org</strong> to receive regular updates.
-                            </p>
-                            <p style="margin:0 0 20px;">
-                                We appreciate your interest in joining us and look forward to welcoming you to Invest
-                                Lagos 3.0 on the 8th and 9th of June 2026.
-                            </p>
-                            <p style="margin:0 0 20px;">
-                                Venue is Eko Hotel and Suites, Victoria Island, Lagos.
-                            </p>
-                            <p style="margin:0 0 20px;">
-                                For further enquiries, please call
+                                Should you have any questions or require additional information, please contact us at
                                 <a href="tel:+2347076623338"
                                     style="color:#3EBF75;text-decoration:none;">+234.707.662.3338</a>
                                 or email
-                                <a href="mailto:investlagos@lagosmccti.com"
-                                    style="color:#3EBF75;text-decoration:none;">investlagos@lagosmccti.com.</a>
+                                <a href="mailto:investinlagos@lagosmccti.org"
+                                    style="color:#3EBF75;text-decoration:none;">investinlagos@lagosmccti.org</a>
                             </p>
                             <p style="margin:0 0 20px;">
                                 or visit the Invest in Lagos website at
                                 <a href="https://investlagos.org"
                                     style="color:#3EBF75;text-decoration:none;">investlagos.org</a>.
+                            </p>
+                            <p style="margin:0 0 20px;">
+                                We appreciate your interest in joining us and look forward to welcoming you to
+                                <strong>Invest in Lagos, the Business Gateway to Africa</strong>.
                             </p>
                             <p style="margin:0 0 8px; text-style:italic"><strong>Warmly.</strong></p>
                             <p style="margin:0;font-weight:600;color:#1B3A2D;">The Administrative Secretariat of Invest

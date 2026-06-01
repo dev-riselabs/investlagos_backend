@@ -55,6 +55,7 @@ Route::prefix('admin')->group(function () {
         Route::get('registrations', [AdminRegistrationController::class, 'index']);
         Route::get('registrations/{registration}', [AdminRegistrationController::class, 'show']);
         Route::match(['put', 'patch'], 'registrations/{registration}', [AdminRegistrationController::class, 'update']);
+        Route::post('registrations/{registration}/confirm', [AdminRegistrationController::class, 'confirm']);
         Route::delete('registrations/{registration}', [AdminRegistrationController::class, 'destroy']);
 
         // Subscribers management (no create — subscribers come from the public form).

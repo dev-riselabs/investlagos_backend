@@ -4,9 +4,13 @@ namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateRegistrationRequest;
+use App\Mail\RegistrationConfirmationMail;
 use App\Models\Registration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use Throwable;
 
 class RegistrationController extends Controller
 {
@@ -74,6 +78,44 @@ class RegistrationController extends Controller
         $registration->delete();
 
         return response()->json(['message' => 'Registration deleted.']);
+    }
+
+    /**
+     * Mark a registration as confirmed and dispatch the confirmation email.
+     *
+     * The action is idempotent: re-confirming an already-confirmed
+     * registration is a no-op (no second email is sent).
+     */
+    public function confirm(Registration $registration): JsonResponse
+    {
+        if ($registration->confirmed_at) {
+            return response()->json([
+                'message'   => 'Registration is already confirmed.',
+                'mail_sent' => false,
+                'data'      => $registration,
+            ]);
+        }
+
+        $registration->forceFill(['confirmed_at' => now()])->save();
+
+        $mailSent = true;
+        try {
+            Mail::to($registration->email)
+                ->send(new RegistrationConfirmationMail($registration));
+        } catch (Throwable $e) {
+            $mailSent = false;
+            Log::error('Registration confirmation email failed', [
+                'registration_id' => $registration->id,
+                'email'           => $registration->email,
+                'exception'       => $e->getMessage(),
+            ]);
+        }
+
+        return response()->json([
+            'message'   => 'Registration confirmed.',
+            'mail_sent' => $mailSent,
+            'data'      => $registration->fresh(),
+        ]);
     }
 
     /**
