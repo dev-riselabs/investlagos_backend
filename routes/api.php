@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AuthController as AdminAuthController;
+use App\Http\Controllers\Api\Admin\InvestmentProposalController as AdminInvestmentProposalController;
 use App\Http\Controllers\Api\Admin\PublicationController as AdminPublicationController;
 use App\Http\Controllers\Api\Admin\RegistrationController as AdminRegistrationController;
 use App\Http\Controllers\Api\Admin\SubscriberController as AdminSubscriberController;
+use App\Http\Controllers\Api\InvestmentProposalController;
 use App\Http\Controllers\Api\PublicationController;
 use App\Http\Controllers\Api\RegistrationController;
 use App\Http\Controllers\Api\SubscriberController;
@@ -25,6 +27,9 @@ Route::post('/registrations', [RegistrationController::class, 'store']);
 
 // Newsletter / updates subscription (public form on the frontend).
 Route::post('/subscribers', [SubscriberController::class, 'store']);
+
+// Investment Project Proposal — Deal Room submission (public form on the frontend).
+Route::post('/investment-proposals', [InvestmentProposalController::class, 'store']);
 
 // Publications (read-only public endpoints).
 Route::get('/publications', [PublicationController::class, 'index']);
@@ -63,5 +68,12 @@ Route::prefix('admin')->group(function () {
         Route::get('subscribers', [AdminSubscriberController::class, 'index']);
         Route::get('subscribers/{subscriber}', [AdminSubscriberController::class, 'show']);
         Route::delete('subscribers/{subscriber}', [AdminSubscriberController::class, 'destroy']);
+
+        // Investment proposals management (no create — proposals come from the public form).
+        Route::get('investment-proposals/stats', [AdminInvestmentProposalController::class, 'stats']);
+        Route::get('investment-proposals', [AdminInvestmentProposalController::class, 'index']);
+        Route::get('investment-proposals/{investmentProposal}', [AdminInvestmentProposalController::class, 'show']);
+        Route::match(['put', 'patch'], 'investment-proposals/{investmentProposal}', [AdminInvestmentProposalController::class, 'update']);
+        Route::delete('investment-proposals/{investmentProposal}', [AdminInvestmentProposalController::class, 'destroy']);
     });
 });
