@@ -19,8 +19,13 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [env('FRONTEND_URL', 'http://127.0.0.1:5173'), 'http://127.0.0.1:5173'],
-    // 'allowed_origins' => [env('FRONTEND_URL', 'https://investlagos.org'), 'http://127.0.0.1:5173'],
+    'allowed_origins' => array_filter(array_unique([
+        env('FRONTEND_URL'),
+        'https://investlagos.org',
+        'https://www.investlagos.org',
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+    ])),
 
     'allowed_origins_patterns' => [],
 

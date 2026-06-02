@@ -24,14 +24,14 @@ class RegistrationController extends Controller
 
         $registration = Registration::create($data);
 
-        // A mail failure must not break the registration response.
+        // Queue the mail so SMTP latency cannot delay the HTTP response.
         $mailSent = true;
         try {
             Mail::to($registration->email)
-                ->send(new RegistrationNotificationMail($registration));
+                ->queue(new RegistrationNotificationMail($registration));
         } catch (Throwable $e) {
             $mailSent = false;
-            Log::error('Registration notification email failed', [
+            Log::error('Registration notification email failed to queue', [
                 'registration_id' => $registration->id,
                 'email'           => $registration->email,
                 'exception'       => $e->getMessage(),

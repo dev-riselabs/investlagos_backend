@@ -17,14 +17,14 @@ class SubscriberController extends Controller
     {
         $subscriber = Subscriber::create($request->validated());
 
-        // A mail failure must not break the subscribe response.
+        // Queue the mail so SMTP latency cannot delay the HTTP response.
         $mailSent = true;
         try {
             Mail::to($subscriber->email)
-                ->send(new SubscriberWelcomeMail($subscriber));
+                ->queue(new SubscriberWelcomeMail($subscriber));
         } catch (Throwable $e) {
             $mailSent = false;
-            Log::error('Subscriber welcome email failed', [
+            Log::error('Subscriber welcome email failed to queue', [
                 'subscriber_id' => $subscriber->id,
                 'email'         => $subscriber->email,
                 'exception'     => $e->getMessage(),

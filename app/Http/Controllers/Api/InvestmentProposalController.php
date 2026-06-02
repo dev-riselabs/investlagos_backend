@@ -17,14 +17,14 @@ class InvestmentProposalController extends Controller
     {
         $proposal = InvestmentProposal::create($request->validated());
 
-        // A mail failure must never break the submission response.
+        // Queue the mail so SMTP latency cannot delay the HTTP response.
         $mailSent = true;
         try {
             Mail::to($proposal->project_owner_email)
-                ->send(new InvestmentProposalNotificationMail($proposal));
+                ->queue(new InvestmentProposalNotificationMail($proposal));
         } catch (Throwable $e) {
             $mailSent = false;
-            Log::error('Investment proposal notification email failed', [
+            Log::error('Investment proposal notification email failed to queue', [
                 'proposal_id' => $proposal->id,
                 'email'       => $proposal->project_owner_email,
                 'exception'   => $e->getMessage(),
