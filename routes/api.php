@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\Admin\InvestmentProposalController as AdminInvestme
 use App\Http\Controllers\Api\Admin\PublicationController as AdminPublicationController;
 use App\Http\Controllers\Api\Admin\RegistrationController as AdminRegistrationController;
 use App\Http\Controllers\Api\Admin\SubscriberController as AdminSubscriberController;
+use App\Http\Controllers\Api\ContactMessageController;
 use App\Http\Controllers\Api\InvestmentProposalController;
 use App\Http\Controllers\Api\PublicationController;
 use App\Http\Controllers\Api\RegistrationController;
@@ -30,6 +31,9 @@ Route::post('/subscribers', [SubscriberController::class, 'store']);
 
 // Investment Project Proposal — Deal Room submission (public form on the frontend).
 Route::post('/investment-proposals', [InvestmentProposalController::class, 'store']);
+
+// Contact / Feedback form (public form on the frontend).
+Route::post('/contact-messages', [ContactMessageController::class, 'store']);
 
 // Publications (read-only public endpoints).
 Route::get('/publications', [PublicationController::class, 'index']);
